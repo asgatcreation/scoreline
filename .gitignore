@@ -1,0 +1,39 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# builds
+dist/
+.next/
+out/
+build/
+*.tsbuildinfo
+next-env.d.ts
+
+# env and secrets: never commit
+.env
+.env.*
+!.env.example
+
+# tests
+coverage/
+playwright-report/
+test-results/
+blob-report/
+
+# logs and OS
+*.log
+.DS_Store
+Thumbs.db
+
+# editors and tools
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.claude/settings.local.json
+.vercel
+
+# local tool files (Next.js dev regenerates AGENTS.md; keep them out of the repo)
+.claude/
+AGENTS.md
+CLAUDE.md

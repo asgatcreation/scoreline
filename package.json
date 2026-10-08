@@ -1,0 +1,31 @@
+{
+  "name": "scoreline",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Real-time football live scores: Next.js + NestJS + Socket.IO + Prisma monorepo.",
+  "author": "Akanji Oluwaseun Gabriel (https://github.com/asgatcreation)",
+  "license": "UNLICENSED",
+  "packageManager": "pnpm@12.10.1",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @scoreline/shared build && pnpm --parallel --filter \"./apps/*\" --filter @scoreline/shared dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm --filter @scoreline/shared build && pnpm -r typecheck",
+    "test": "pnpm --filter @scoreline/shared build && pnpm -r test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.5",
+    "@types/node": "24.19.1",
+    "eslint": "9.39.5",
+    "globals": "17.13.0",
+    "prettier": "3.9.9",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.71.1",
+    "vitest": "5.0.3"
+  }
+}
