@@ -1,0 +1,38 @@
+# Render Blueprint for the Scoreline API (REST, Socket.IO and the ingest worker).
+# Secrets are marked sync: false so Render asks for them; they never live in git.
+services:
+  - type: web
+    name: scoreline-api
+    runtime: node
+    plan: free
+    # Same region as the Neon database, so queries are fast.
+    region: frankfurt
+    branch: main
+    autoDeploy: true
+    buildCommand: >-
+      corepack enable &&
+      pnpm install --frozen-lockfile &&
+      pnpm --filter @scoreline/shared build &&
+      pnpm --filter @scoreline/api build
+    # Apply any new database migrations, then start the server.
+    startCommand: >-
+      pnpm --filter @scoreline/api exec prisma migrate deploy &&
+      node apps/api/dist/main.js
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: '24'
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: API_FOOTBALL_KEY
+        sync: false
+      - key: FOOTBALL_DATA_TOKEN
+        sync: false
+      - key: WEB_ORIGIN
+        value: http://localhost:3001
+      - key: DEMO_ENABLED
+        value: 'true'
+      - key: INGEST_ENABLED
+        value: 'true'
