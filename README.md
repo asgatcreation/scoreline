@@ -19,7 +19,7 @@ else. Live scoreboards, match timelines, line-ups, tables and goal alerts, updat
 
 ## Run locally
 
-Requires Node.js 24+ and pnpm 12.
+Requires Node.js 24+ and pnpm 12 (`npm install -g pnpm@12`).
 
 ```bash
 pnpm install
@@ -27,6 +27,8 @@ cp apps/api/.env.example apps/api/.env
 cp apps/web/.env.example apps/web/.env.local
 pnpm dev
 ```
+
+On Windows PowerShell, use `Copy-Item` instead of `cp`.
 
 The web app runs on http://localhost:3001 and the API on http://localhost:4000
 (health check: `/healthz`).

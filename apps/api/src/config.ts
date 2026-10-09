@@ -9,3 +9,14 @@ export function corsOrigins(env: NodeJS.ProcessEnv = process.env): string[] {
     .map((origin) => origin.trim().replace(/\/$/, ''))
     .filter(Boolean);
 }
+
+/**
+ * Port the API listens on. API_PORT wins so a stray PORT meant for another
+ * process (the web dev server, an IDE preview) can't make the API collide
+ * with it; hosts like Render only set PORT, which is used next.
+ */
+export function apiPort(env: NodeJS.ProcessEnv = process.env): number {
+  const raw = env.API_PORT || env.PORT;
+  const port = Number(raw);
+  return raw && Number.isInteger(port) && port > 0 ? port : 4000;
+}
