@@ -1,6 +1,6 @@
 import { addDays } from '@scoreline/shared';
 import { TRACKED_COMPETITIONS, trackedByFootballDataCode } from '../../football/competitions.js';
-import { ProviderHttp, type UsageStore } from '../provider-http.js';
+import { ProviderError, ProviderHttp, type UsageStore } from '../provider-http.js';
 import { QuotaTracker } from '../quota.js';
 import type {
   LiveSource,
@@ -56,22 +56,23 @@ export class FootballDataProvider implements SeasonSource, LiveSource {
     return body.matches.map((m) => mapMatch(m, competition));
   }
 
+  /** null when the competition has no current table (e.g. between tournaments). */
   async getStandings(competitionSlug: string): Promise<ProviderStandings | null> {
     const competition = this.competition(competitionSlug);
-    const body = await this.http.get<FdStandingsResponse>(
-      `/competitions/${competition.fdCode}/standings`,
+    const body = await orNull(
+      this.http.get<FdStandingsResponse>(`/competitions/${competition.fdCode}/standings`),
     );
-    return mapStandings(body, competition);
+    return body ? mapStandings(body, competition) : null;
   }
 
   async getScorers(
     competitionSlug: string,
   ): Promise<{ season: ProviderSeason; scorers: ProviderScorer[] } | null> {
     const competition = this.competition(competitionSlug);
-    const body = await this.http.get<FdScorersResponse>(
-      `/competitions/${competition.fdCode}/scorers?limit=20`,
+    const body = await orNull(
+      this.http.get<FdScorersResponse>(`/competitions/${competition.fdCode}/scorers?limit=20`),
     );
-    return mapScorers(body, competition);
+    return body ? mapScorers(body, competition) : null;
   }
 
   async getLive(): Promise<ProviderMatch[]> {
@@ -105,5 +106,15 @@ export class FootballDataProvider implements SeasonSource, LiveSource {
     const competition = TRACKED_COMPETITIONS.find((c) => c.slug === slug && c.fdCode);
     if (!competition) throw new Error(`football-data.org does not cover ${slug}`);
     return competition;
+  }
+}
+
+/** Turns a 404 into null; every other error still throws. */
+async function orNull<T>(request: Promise<T>): Promise<T | null> {
+  try {
+    return await request;
+  } catch (err) {
+    if (err instanceof ProviderError && err.kind === 'not-found') return null;
+    throw err;
   }
 }

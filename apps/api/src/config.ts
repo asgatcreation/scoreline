@@ -13,6 +13,8 @@ const optionalString = z
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   DATABASE_URL: optionalString,
+  /** Postgres schema; only tests change it (to keep test data apart). */
+  DATABASE_SCHEMA: optionalString,
   API_FOOTBALL_KEY: optionalString,
   FOOTBALL_DATA_TOKEN: optionalString,
   /** Requests per day on the API-Football plan (free = 100). */
@@ -28,6 +30,7 @@ const envSchema = z.object({
 export interface AppConfig {
   nodeEnv: 'development' | 'test' | 'production';
   databaseUrl: string | undefined;
+  databaseSchema: string | undefined;
   apiFootballKey: string | undefined;
   footballDataToken: string | undefined;
   apiFootballDailyLimit: number;
@@ -48,6 +51,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
   return {
     nodeEnv: e.NODE_ENV,
     databaseUrl: e.DATABASE_URL,
+    databaseSchema: e.DATABASE_SCHEMA,
     apiFootballKey: e.API_FOOTBALL_KEY,
     footballDataToken: e.FOOTBALL_DATA_TOKEN,
     apiFootballDailyLimit: e.API_FOOTBALL_DAILY_LIMIT,

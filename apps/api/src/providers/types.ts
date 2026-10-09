@@ -147,7 +147,8 @@ export interface SeasonSource {
   readonly name: ProviderName;
   /** Competition slugs this source can serve. */
   competitions(): string[];
-  getMatches(competitionSlug: string, from: string, to: string): Promise<ProviderMatch[]>;
+  /** Whole season when no range is given. */
+  getMatches(competitionSlug: string, from?: string, to?: string): Promise<ProviderMatch[]>;
   getStandings(competitionSlug: string): Promise<ProviderStandings | null>;
   getScorers(
     competitionSlug: string,

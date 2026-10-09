@@ -96,3 +96,14 @@ describe('FootballDataProvider', () => {
     expect(init.headers).toEqual({ 'X-Auth-Token': 'token-123' });
   });
 });
+
+describe('FootballDataProvider missing data', () => {
+  it('returns null for a table that does not exist, without backing off', async () => {
+    const provider = new FootballDataProvider('t', 10, undefined, async () =>
+      Response.json({ message: 'Not found' }, { status: 404 }),
+    );
+    await expect(provider.getStandings('world-cup')).resolves.toBeNull();
+    await expect(provider.getScorers('world-cup')).resolves.toBeNull();
+    expect(provider.http.quota.waitMs()).toBe(0);
+  });
+});

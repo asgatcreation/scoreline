@@ -5,7 +5,7 @@ import type { ProviderName } from './types.js';
 export class ProviderError extends Error {
   constructor(
     readonly provider: ProviderName,
-    readonly kind: 'quota' | 'rate-limit' | 'http' | 'plan' | 'network',
+    readonly kind: 'quota' | 'rate-limit' | 'http' | 'plan' | 'network' | 'not-found',
     message: string,
     readonly retryAfterMs?: number,
   ) {
@@ -85,6 +85,13 @@ export class ProviderHttp {
       const retryMs = Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : undefined;
       await this.fail('HTTP 429 rate limited', retryMs);
       throw new ProviderError(provider, 'rate-limit', 'rate limited (429)', retryMs);
+    }
+    if (res.status === 404) {
+      // "No such data" (e.g. no table for a finished tournament) is not a
+      // provider fault, so it costs a request but never triggers a backoff.
+      quota.recordSuccess();
+      await this.saveUsage();
+      throw new ProviderError(provider, 'not-found', `nothing at ${redact(path)}`);
     }
     if (!res.ok) {
       await this.fail(`HTTP ${res.status}`);

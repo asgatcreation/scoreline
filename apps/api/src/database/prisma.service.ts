@@ -16,12 +16,25 @@ export class PrismaService extends PrismaClient implements OnModuleDestroy {
     if (!config.databaseUrl) {
       throw new Error('DATABASE_URL is not set. Copy apps/api/.env.example to apps/api/.env.');
     }
-    const adapter = new PrismaPg({
-      connectionString: normaliseSslMode(config.databaseUrl),
-      // Free Neon computes take a few seconds to wake up.
-      connectionTimeoutMillis: 20_000,
-      max: 5,
-    });
+    const logger = new Logger(PrismaService.name);
+    const adapter = new PrismaPg(
+      {
+        connectionString: normaliseSslMode(config.databaseUrl),
+        // Free Neon computes take a few seconds to wake up.
+        connectionTimeoutMillis: 20_000,
+        max: 5,
+        // A dropped connection must fail fast, never hang the worker.
+        keepAlive: true,
+        statement_timeout: 30_000,
+        query_timeout: 35_000,
+        idleTimeoutMillis: 30_000,
+      },
+      {
+        schema: config.databaseSchema,
+        // Neon closes idle connections; log it instead of crashing the process.
+        onPoolError: (err) => logger.warn(`Database pool error: ${err.message}`),
+      },
+    );
     super({ adapter });
   }
 
