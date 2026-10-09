@@ -420,15 +420,13 @@ class SideBuilder {
           grid: grid[i]!,
           isStarter: true,
         })),
-        ...this.squad
-          .slice(11)
-          .map((p) => ({
-            name: p.name,
-            number: p.number,
-            position: p.position,
-            grid: null,
-            isStarter: false,
-          })),
+        ...this.squad.slice(11).map((p) => ({
+          name: p.name,
+          number: p.number,
+          position: p.position,
+          grid: null,
+          isStarter: false,
+        })),
       ],
     };
   }
