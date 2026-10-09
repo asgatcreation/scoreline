@@ -46,6 +46,13 @@ const CHUNK = 200;
 
 type ExistingMatch = Prisma.MatchGetPayload<{ include: { events: true } }>;
 
+/** A provider team plus the fixtures it appeared in (used to link by fixture). */
+interface TeamWithContext {
+  team: ProviderTeam;
+  competitionSlug: string;
+  fixtures?: { kickoffAt: Date; side: 'home' | 'away'; opponentExternalId: string }[];
+}
+
 @Injectable()
 export class SyncService {
   private readonly logger = new Logger(SyncService.name);
@@ -147,10 +154,14 @@ export class SyncService {
    */
   async resolveTeams(
     provider: ProviderName,
-    teams: { team: ProviderTeam; competitionSlug: string }[],
+    teams: TeamWithContext[],
   ): Promise<Map<string, string>> {
-    const unique = new Map<string, { team: ProviderTeam; competitionSlug: string }>();
-    for (const t of teams) unique.set(t.team.externalId, t);
+    const unique = new Map<string, TeamWithContext>();
+    for (const t of teams) {
+      const seen = unique.get(t.team.externalId);
+      if (seen) seen.fixtures = [...(seen.fixtures ?? []), ...(t.fixtures ?? [])];
+      else unique.set(t.team.externalId, { ...t, fixtures: [...(t.fixtures ?? [])] });
+    }
     const ids = new Map<string, string>();
     if (unique.size === 0) return ids;
 
@@ -218,37 +229,80 @@ export class SyncService {
         ).map((r) => r.internalId),
       );
       const free = candidates.filter((c) => !taken.has(c.id));
-
-      for (const { team } of list) {
-        let teamId =
-          findMatchingTeam(team, free)?.id ?? (await this.exactNameMatch(provider, team));
-        if (teamId) {
-          free.splice(
-            free.findIndex((c) => c.id === teamId),
-            1,
-          );
-          if (provider === 'FOOTBALL_DATA') {
-            await this.prisma.team.update({
-              where: { id: teamId },
-              data: {
-                name: team.name,
-                shortName: team.shortName ?? undefined,
-                tla: team.tla ?? undefined,
-                crestUrl: team.crestUrl ?? undefined,
-              },
-            });
-          }
-        } else {
-          teamId = await this.createTeam(team);
+      const link = async (team: ProviderTeam, teamId: string) => {
+        const index = free.findIndex((c) => c.id === teamId);
+        if (index >= 0) free.splice(index, 1);
+        taken.add(teamId);
+        if (provider === 'FOOTBALL_DATA') {
+          await this.prisma.team.update({
+            where: { id: teamId },
+            data: {
+              name: team.name,
+              shortName: team.shortName ?? undefined,
+              tla: team.tla ?? undefined,
+              crestUrl: team.crestUrl ?? undefined,
+            },
+          });
         }
-        await this.prisma.externalRef.createMany({
-          data: [{ provider, entityType: 'TEAM', externalId: team.externalId, internalId: teamId }],
-          skipDuplicates: true,
-        });
+        await this.saveTeamRef(provider, team.externalId, teamId);
         ids.set(team.externalId, teamId);
+      };
+
+      // Pass 1: by name.
+      const unresolved: typeof list = [];
+      for (const entry of list) {
+        const teamId =
+          findMatchingTeam(entry.team, free)?.id ??
+          (await this.exactNameMatch(provider, entry.team));
+        if (teamId && !taken.has(teamId)) await link(entry.team, teamId);
+        else unresolved.push(entry);
+      }
+
+      // Pass 2: by fixture. Same competition, same kick-off, same known
+      // opponent means the same club, whatever the names ("Atletico-MG" is
+      // "CA Mineiro").
+      for (const entry of unresolved) {
+        const teamId = await this.teamFromFixture(competitionId, entry, ids, taken);
+        if (teamId) await link(entry.team, teamId);
+        else await link(entry.team, await this.createTeam(entry.team));
       }
     }
     return ids;
+  }
+
+  private async saveTeamRef(provider: ProviderName, externalId: string, teamId: string) {
+    await this.prisma.externalRef.createMany({
+      data: [{ provider, entityType: 'TEAM', externalId, internalId: teamId }],
+      skipDuplicates: true,
+    });
+  }
+
+  private async teamFromFixture(
+    competitionId: string,
+    entry: TeamWithContext,
+    ids: Map<string, string>,
+    taken: Set<string>,
+  ): Promise<string | undefined> {
+    for (const f of entry.fixtures ?? []) {
+      const opponent = ids.get(f.opponentExternalId);
+      if (!opponent) continue;
+      const window = {
+        gte: new Date(f.kickoffAt.getTime() - 3 * 3_600_000),
+        lte: new Date(f.kickoffAt.getTime() + 3 * 3_600_000),
+      };
+      const matches = await this.prisma.match.findMany({
+        where:
+          f.side === 'home'
+            ? { competitionId, awayTeamId: opponent, kickoffAt: window }
+            : { competitionId, homeTeamId: opponent, kickoffAt: window },
+        select: { homeTeamId: true, awayTeamId: true },
+      });
+      const found = matches
+        .map((m) => (f.side === 'home' ? m.homeTeamId : m.awayTeamId))
+        .filter((id) => !taken.has(id));
+      if (found.length === 1) return found[0];
+    }
+    return undefined;
   }
 
   private async exactNameMatch(
@@ -312,8 +366,28 @@ export class SyncService {
     const teamIds = await this.resolveTeams(
       provider,
       matches.flatMap((m) => [
-        { team: m.home, competitionSlug: m.competitionSlug },
-        { team: m.away, competitionSlug: m.competitionSlug },
+        {
+          team: m.home,
+          competitionSlug: m.competitionSlug,
+          fixtures: [
+            {
+              kickoffAt: m.kickoffAt,
+              side: 'home' as const,
+              opponentExternalId: m.away.externalId,
+            },
+          ],
+        },
+        {
+          team: m.away,
+          competitionSlug: m.competitionSlug,
+          fixtures: [
+            {
+              kickoffAt: m.kickoffAt,
+              side: 'away' as const,
+              opponentExternalId: m.home.externalId,
+            },
+          ],
+        },
       ]),
     );
 

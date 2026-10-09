@@ -149,6 +149,36 @@ describe.skipIf(!hasTestDb)('SyncService (database)', () => {
     expect(last.changes.map((c) => c.type)).toEqual(['score', 'minute', 'event-removed']);
   });
 
+  it('links a club by fixture when the names share no words', async () => {
+    const kickoffAt = new Date('2026-10-08T22:00:00Z');
+    // football-data.org: "CA Paranaense v CA Mineiro".
+    await sync.syncMatches('FOOTBALL_DATA', 'season', [
+      {
+        ...arsenalLeedsFd,
+        externalId: 'fd-bsa-1',
+        competitionSlug: 'brasileirao',
+        home: { externalId: '1776', name: 'CA Paranaense' },
+        away: { externalId: '1766', name: 'CA Mineiro' },
+        kickoffAt,
+      },
+    ]);
+    // API-Football: "Athletico Paranaense v Atletico-MG", same kick-off.
+    const result = await sync.syncMatches('API_FOOTBALL', 'live', [
+      {
+        ...arsenalLeedsAf(),
+        externalId: 'af-bsa-1',
+        competitionSlug: 'brasileirao',
+        home: { externalId: '134', name: 'Athletico Paranaense' },
+        away: { externalId: '1062', name: 'Atletico-MG' },
+        kickoffAt,
+        events: [],
+      },
+    ]);
+    expect(result.created).toBe(0);
+    expect(await prisma.team.count({ where: { name: { contains: 'Atletico-MG' } } })).toBe(0);
+    expect(await prisma.match.count({ where: { competition: { slug: 'brasileirao' } } })).toBe(1);
+  });
+
   it('saves line-ups and stats from match details', async () => {
     const matchId = await sync.saveDetails('API_FOOTBALL', {
       match: arsenalLeedsAf(),
