@@ -1,4 +1,4 @@
-import type { EventType, MatchStatus, Side } from '@scoreline/shared';
+import type { DeltaEvent, MatchDelta, MatchStatus } from '@scoreline/shared';
 
 /** The parts of a match that fans see change during a game. */
 export interface MatchSnapshot {
@@ -14,30 +14,14 @@ export interface MatchSnapshot {
   penAway: number | null;
 }
 
-export interface SnapshotEvent {
-  key: string;
-  type: EventType;
-  side: Side;
-  minute: number;
-  extraMinute: number | null;
-  playerName: string | null;
-  assistName: string | null;
-  detail: string | null;
-}
+export type SnapshotEvent = DeltaEvent;
 
 /**
- * Small deltas sent to browsers. "minute" changes are frequent and cheap,
- * so they are broadcast but not stored in the MatchUpdate log.
+ * Small deltas sent to browsers (the shared realtime protocol type).
+ * "minute" changes are frequent and cheap, so they are broadcast but not
+ * stored in the MatchUpdate log.
  */
-export type MatchChange =
-  | { type: 'status'; status: MatchStatus; previous: MatchStatus }
-  | { type: 'score'; home: number | null; away: number | null }
-  | { type: 'halftime'; home: number | null; away: number | null }
-  | { type: 'penalties'; home: number | null; away: number | null }
-  | { type: 'kickoff'; kickoffAt: string }
-  | { type: 'minute'; minute: number | null; injuryTime: number | null }
-  | { type: 'event'; event: SnapshotEvent }
-  | { type: 'event-removed'; key: string };
+export type MatchChange = MatchDelta;
 
 export function isPersistedChange(change: MatchChange): boolean {
   return change.type !== 'minute';

@@ -8,6 +8,7 @@ import { ChangeBus } from './ingest/change-bus.js';
 import { IngestService } from './ingest/ingest.service.js';
 import { SyncService } from './ingest/sync.service.js';
 import { PrismaUsageStore } from './ingest/usage-store.js';
+import { LiveGateway } from './realtime/live.gateway.js';
 import { StatusController } from './status/status.controller.js';
 
 @Module({
@@ -20,6 +21,7 @@ import { StatusController } from './status/status.controller.js';
     PrismaUsageStore,
     IngestService,
     FootballQueryService,
+    LiveGateway,
   ],
 })
 export class AppModule {}

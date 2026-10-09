@@ -4,6 +4,7 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
 import { apiPort, corsOrigins } from './config.js';
+import { ScorelineIoAdapter } from './realtime/io-adapter.js';
 
 async function bootstrap() {
   // Load apps/api/.env in local development. Variables already set in the
@@ -12,10 +13,13 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
   app.enableCors({ origin: corsOrigins(), methods: ['GET', 'POST', 'DELETE'] });
+  app.useWebSocketAdapter(new ScorelineIoAdapter(app));
   app.enableShutdownHooks();
 
   const port = apiPort();
-  await app.listen(port, '0.0.0.0');
+  // Render needs 0.0.0.0; locally listen on IPv4 and IPv6 so "localhost" always works.
+  if (process.env.NODE_ENV === 'production') await app.listen(port, '0.0.0.0');
+  else await app.listen(port);
   Logger.log(`Scoreline API listening on port ${port}`, 'Bootstrap');
 }
 await bootstrap();

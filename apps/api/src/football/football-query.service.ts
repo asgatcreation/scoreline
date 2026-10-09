@@ -97,6 +97,22 @@ export class FootballQueryService implements OnModuleDestroy {
     return { date, timezone, groups: groupByCompetition(matches) };
   }
 
+  /** Just the summary (cheap), for real-time catch-up after a reconnect. */
+  async summaryById(matchId: string): Promise<MatchSummary | null> {
+    if (matchId.startsWith('demo-')) {
+      const demo = this.demo.enabled ? this.demo.find(matchId) : null;
+      if (!demo) return null;
+      const { venue, referee, attendance, events, lineups, stats, headToHead, ...summary } = demo;
+      void [venue, referee, attendance, events, lineups, stats, headToHead];
+      return summary;
+    }
+    const row = await this.prisma.match.findUnique({
+      where: { id: matchId },
+      include: matchSummaryInclude,
+    });
+    return row ? toMatchSummary(row) : null;
+  }
+
   async liveMatches(): Promise<MatchSummary[]> {
     const real = await this.cache.get('live', 10_000, async () =>
       (
