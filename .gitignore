@@ -37,3 +37,6 @@ Thumbs.db
 .claude/
 AGENTS.md
 CLAUDE.md
+
+# Prisma client is generated on install
+apps/api/src/generated/

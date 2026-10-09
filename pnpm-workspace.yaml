@@ -5,7 +5,9 @@ packages:
 # Packages allowed to run install scripts (pnpm blocks them by default).
 allowBuilds:
   '@nestjs/core': false
+  '@prisma/engines': true
   '@swc/core': true
   esbuild: true
+  prisma: true
   sharp: true
   unrs-resolver: true

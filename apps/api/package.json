@@ -12,22 +12,34 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "vitest run --config ./vitest.config.e2e.ts"
+    "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
+    "postinstall": "prisma generate",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:status": "prisma migrate status",
+    "db:studio": "prisma studio"
   },
   "dependencies": {
     "@nestjs/common": "12.1.2",
     "@nestjs/core": "12.1.2",
     "@nestjs/platform-express": "12.1.2",
+    "@prisma/adapter-pg": "7.10.0",
+    "@prisma/client": "7.10.0",
     "@scoreline/shared": "workspace:*",
+    "pg": "8.23.1",
     "reflect-metadata": "0.2.2",
-    "rxjs": "7.8.2"
+    "rxjs": "7.8.2",
+    "zod": "4.6.5"
   },
   "devDependencies": {
     "@nestjs/cli": "12.0.8",
     "@nestjs/schematics": "12.0.6",
     "@nestjs/testing": "12.1.2",
     "@types/express": "5.0.6",
+    "@types/pg": "8.23.1",
     "@types/supertest": "7.2.1",
+    "prisma": "7.10.0",
     "supertest": "7.3.1"
   }
 }

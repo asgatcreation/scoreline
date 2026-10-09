@@ -1,0 +1,456 @@
+// Scoreline database schema.
+//
+// Everything here is provider-independent: adapters translate API-Football,
+// football-data.org and the demo replay into these tables, and ExternalRef
+// remembers which provider id belongs to which of our rows.
+//
+// Phase 2 (virtual-coin predictions) will only ADD tables (User, Wallet,
+// LedgerEntry, Market, Bet, Settlement) that reference Match.id. Settlement
+// keys off Match.finalizedAt and the append-only MatchUpdate log, so nothing
+// below needs to change for it.
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "esm"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum MatchStatus {
+  SCHEDULED
+  FIRST_HALF
+  HALF_TIME
+  SECOND_HALF
+  EXTRA_TIME
+  BREAK_EXTRA_TIME
+  PENALTIES
+  FINISHED
+  POSTPONED
+  SUSPENDED
+  CANCELLED
+  ABANDONED
+}
+
+enum Side {
+  HOME
+  AWAY
+}
+
+enum EventType {
+  GOAL
+  OWN_GOAL
+  PENALTY_GOAL
+  MISSED_PENALTY
+  YELLOW_CARD
+  SECOND_YELLOW
+  RED_CARD
+  SUBSTITUTION
+  VAR
+}
+
+enum CompetitionType {
+  LEAGUE
+  CUP
+}
+
+enum Provider {
+  DEMO
+  API_FOOTBALL
+  FOOTBALL_DATA
+}
+
+enum EntityType {
+  COMPETITION
+  TEAM
+  PLAYER
+  MATCH
+  VENUE
+}
+
+// ---------------------------------------------------------------------------
+// Football
+// ---------------------------------------------------------------------------
+
+model Competition {
+  id          String          @id @default(cuid())
+  slug        String          @unique
+  name        String
+  shortName   String?
+  country     String?
+  countryCode String?
+  type        CompetitionType @default(LEAGUE)
+  emblemUrl   String?
+  /// Lower comes first on the home page (Premier League = 1).
+  priority    Int             @default(100)
+  isDemo      Boolean         @default(false)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  seasons Season[]
+  matches Match[]
+  follows PushFollow[]
+
+  @@index([priority])
+}
+
+model Season {
+  id              String    @id @default(cuid())
+  competitionId   String
+  /// Year the season starts in (2026 for 2026/27).
+  year            Int
+  startDate       DateTime? @db.Date
+  endDate         DateTime? @db.Date
+  currentMatchday Int?
+  isCurrent       Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  competition Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+  matches     Match[]
+  standings   Standing[]
+  topScorers  TopScorer[]
+
+  @@unique([competitionId, year])
+}
+
+model Team {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  name           String
+  shortName      String?
+  /// Three-letter code, e.g. ARS.
+  tla            String?
+  crestUrl       String?
+  primaryColor   String?
+  secondaryColor String?
+  country        String?
+  founded        Int?
+  isNational     Boolean  @default(false)
+  isDemo         Boolean  @default(false)
+  venueId        String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  venue       Venue?       @relation(fields: [venueId], references: [id], onDelete: SetNull)
+  homeMatches Match[]      @relation("HomeTeam")
+  awayMatches Match[]      @relation("AwayTeam")
+  standings   Standing[]
+  topScorers  TopScorer[]
+  squad       Player[]
+  follows     PushFollow[]
+
+  @@index([name])
+}
+
+model Player {
+  id          String    @id @default(cuid())
+  name        String
+  position    String?
+  nationality String?
+  dateOfBirth DateTime? @db.Date
+  photoUrl    String?
+  shirtNumber Int?
+  teamId      String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  team Team? @relation(fields: [teamId], references: [id], onDelete: SetNull)
+
+  @@index([teamId])
+}
+
+model Venue {
+  id        String   @id @default(cuid())
+  name      String
+  city      String?
+  capacity  Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  teams   Team[]
+  matches Match[]
+
+  @@unique([name, city])
+}
+
+model Match {
+  id              String      @id @default(cuid())
+  /// Readable URL id, e.g. "arsenal-vs-chelsea-2026-10-18".
+  slug            String      @unique
+  competitionId   String
+  seasonId        String?
+  homeTeamId      String
+  awayTeamId      String
+  venueId         String?
+  kickoffAt       DateTime
+  status          MatchStatus @default(SCHEDULED)
+  /// Minute shown on the clock (45 during 45+2) and stoppage on top.
+  minute          Int?
+  injuryTime      Int?
+  /// When the current half started; lets browsers tick the clock locally.
+  periodStartedAt DateTime?
+  homeScore       Int?
+  awayScore       Int?
+  htHome          Int?
+  htAway          Int?
+  etHome          Int?
+  etAway          Int?
+  penHome         Int?
+  penAway         Int?
+  round           String?
+  matchday        Int?
+  referee         String?
+  attendance      Int?
+  isDemo          Boolean     @default(false)
+  /// Bumped on every change; clients resume from the last seq they saw.
+  seq             Int         @default(0)
+  /// Set once the result is final. Phase 2 settlement keys off this.
+  finalizedAt     DateTime?
+  /// Last time a fast (live) provider updated the score/status.
+  liveSyncedAt    DateTime?
+  /// Last time events/line-ups/stats were fetched.
+  detailsSyncedAt DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  competition Competition   @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+  season      Season?       @relation(fields: [seasonId], references: [id], onDelete: SetNull)
+  homeTeam    Team          @relation("HomeTeam", fields: [homeTeamId], references: [id], onDelete: Cascade)
+  awayTeam    Team          @relation("AwayTeam", fields: [awayTeamId], references: [id], onDelete: Cascade)
+  venue       Venue?        @relation(fields: [venueId], references: [id], onDelete: SetNull)
+  events      MatchEvent[]
+  lineups     Lineup[]
+  stats       MatchStat[]
+  updates     MatchUpdate[]
+
+  @@index([kickoffAt])
+  @@index([status])
+  @@index([competitionId, kickoffAt])
+  @@index([homeTeamId, kickoffAt])
+  @@index([awayTeamId, kickoffAt])
+}
+
+model MatchEvent {
+  id          String    @id @default(cuid())
+  matchId     String
+  type        EventType
+  side        Side
+  minute      Int
+  extraMinute Int?
+  playerId    String?
+  /// Names are kept even when the player has no row of their own.
+  playerName  String?
+  assistId    String?
+  assistName  String?
+  /// Free text from the provider, e.g. "Goal cancelled" for VAR.
+  detail      String?
+  /// Stable key per provider event so re-ingesting never duplicates.
+  providerKey String
+  createdAt   DateTime  @default(now())
+
+  match Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
+
+  @@unique([matchId, providerKey])
+  @@index([matchId, minute])
+}
+
+model Lineup {
+  id        String   @id @default(cuid())
+  matchId   String
+  side      Side
+  formation String?
+  coachName String?
+  updatedAt DateTime @updatedAt
+
+  match   Match          @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  players LineupPlayer[]
+
+  @@unique([matchId, side])
+}
+
+model LineupPlayer {
+  id        String  @id @default(cuid())
+  lineupId  String
+  playerId  String?
+  name      String
+  number    Int?
+  /// G, D, M or F.
+  position  String?
+  /// Pitch position "row:column" from the provider, e.g. "2:3".
+  grid      String?
+  isStarter Boolean @default(true)
+  order     Int     @default(0)
+
+  lineup Lineup @relation(fields: [lineupId], references: [id], onDelete: Cascade)
+
+  @@index([lineupId])
+}
+
+model MatchStat {
+  id        String   @id @default(cuid())
+  matchId   String
+  /// Normalised key, e.g. "possession", "shots_on_target".
+  type      String
+  homeValue Float?
+  awayValue Float?
+  /// "%" for percentages, empty for counts.
+  unit      String?
+  updatedAt DateTime @updatedAt
+
+  match Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
+
+  @@unique([matchId, type])
+}
+
+model Standing {
+  id           String   @id @default(cuid())
+  seasonId     String
+  teamId       String
+  /// Group name for cup group stages; empty string for a single table.
+  group        String   @default("")
+  position     Int
+  played       Int
+  won          Int
+  drawn        Int
+  lost         Int
+  goalsFor     Int
+  goalsAgainst Int
+  goalDiff     Int
+  points       Int
+  /// Most recent last, e.g. "WWDLW".
+  form         String?
+  /// Qualification/relegation zone shown as a colour in the table.
+  zone         String?
+  updatedAt    DateTime @updatedAt
+
+  season Season @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([seasonId, group, teamId])
+  @@index([seasonId, group, position])
+}
+
+model TopScorer {
+  id         String   @id @default(cuid())
+  seasonId   String
+  teamId     String
+  playerName String
+  rank       Int
+  goals      Int
+  assists    Int?
+  penalties  Int?
+  played     Int?
+  updatedAt  DateTime @updatedAt
+
+  season Season @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([seasonId, playerName, teamId])
+  @@index([seasonId, rank])
+}
+
+// ---------------------------------------------------------------------------
+// Provider bookkeeping
+// ---------------------------------------------------------------------------
+
+/// Maps a provider's id for something to our own row id.
+model ExternalRef {
+  id         String     @id @default(cuid())
+  provider   Provider
+  entityType EntityType
+  externalId String
+  internalId String
+  createdAt  DateTime   @default(now())
+
+  @@unique([provider, entityType, externalId])
+  @@index([entityType, internalId])
+}
+
+/// Requests used per provider per UTC day, so restarts don't forget quota.
+model ProviderUsage {
+  id          String    @id @default(cuid())
+  provider    Provider
+  day         DateTime  @db.Date
+  requests    Int       @default(0)
+  errors      Int       @default(0)
+  lastError   String?
+  lastErrorAt DateTime?
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([provider, day])
+}
+
+/// One row per ingest job run, for the status page and debugging.
+model IngestRun {
+  id         String    @id @default(cuid())
+  provider   Provider
+  job        String
+  startedAt  DateTime  @default(now())
+  finishedAt DateTime?
+  ok         Boolean   @default(false)
+  requests   Int       @default(0)
+  changes    Int       @default(0)
+  error      String?
+
+  @@index([startedAt])
+}
+
+/// Append-only log of every change broadcast for a match. Clients that
+/// reconnect ask for everything after the last seq they saw.
+model MatchUpdate {
+  id        BigInt   @id @default(autoincrement())
+  matchId   String
+  seq       Int
+  type      String
+  payload   Json
+  createdAt DateTime @default(now())
+
+  match Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
+
+  @@unique([matchId, seq])
+  @@index([createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Anonymous web push (no accounts)
+// ---------------------------------------------------------------------------
+
+model PushSubscription {
+  id            String    @id @default(cuid())
+  /// Browser push endpoint URL; the only identifier we keep.
+  endpoint      String    @unique
+  p256dh        String
+  auth          String
+  createdAt     DateTime  @default(now())
+  lastSuccessAt DateTime?
+  failureCount  Int       @default(0)
+
+  follows PushFollow[]
+}
+
+model PushFollow {
+  id             String   @id @default(cuid())
+  subscriptionId String
+  teamId         String?
+  competitionId  String?
+  goals          Boolean  @default(true)
+  kickoff        Boolean  @default(true)
+  halfTime       Boolean  @default(false)
+  fullTime       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+
+  subscription PushSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  team         Team?            @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  competition  Competition?     @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+
+  @@unique([subscriptionId, teamId])
+  @@unique([subscriptionId, competitionId])
+  @@index([teamId])
+}
