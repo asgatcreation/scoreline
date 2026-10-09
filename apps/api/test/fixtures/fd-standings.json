@@ -1,0 +1,110 @@
+{
+  "filters": {
+    "season": "2026"
+  },
+  "area": {
+    "id": 2072,
+    "name": "England",
+    "code": "ENG",
+    "flag": "https://crests.football-data.org/770.svg"
+  },
+  "competition": {
+    "id": 2021,
+    "name": "Premier League",
+    "code": "PL",
+    "type": "LEAGUE",
+    "emblem": "https://crests.football-data.org/PL.png"
+  },
+  "season": {
+    "id": 2502,
+    "startDate": "2026-08-21",
+    "endDate": "2027-05-30",
+    "currentMatchday": 6,
+    "winner": null
+  },
+  "standings": [
+    {
+      "stage": "REGULAR_SEASON",
+      "type": "TOTAL",
+      "group": "Matchday",
+      "table": [
+        {
+          "position": 1,
+          "team": {
+            "id": 65,
+            "name": "Manchester City FC",
+            "shortName": "Man City",
+            "tla": "MCI",
+            "crest": "https://crests.football-data.org/65.png"
+          },
+          "playedGames": 5,
+          "form": null,
+          "won": 5,
+          "draw": 0,
+          "lost": 0,
+          "points": 15,
+          "goalsFor": 13,
+          "goalsAgainst": 5,
+          "goalDifference": 8
+        },
+        {
+          "position": 2,
+          "team": {
+            "id": 57,
+            "name": "Arsenal FC",
+            "shortName": "Arsenal",
+            "tla": "ARS",
+            "crest": "https://crests.football-data.org/57.png"
+          },
+          "playedGames": 5,
+          "form": null,
+          "won": 4,
+          "draw": 0,
+          "lost": 1,
+          "points": 12,
+          "goalsFor": 8,
+          "goalsAgainst": 4,
+          "goalDifference": 4
+        },
+        {
+          "position": 3,
+          "team": {
+            "id": 397,
+            "name": "Brighton & Hove Albion FC",
+            "shortName": "Brighton Hove",
+            "tla": "BHA",
+            "crest": "https://crests.football-data.org/397.png"
+          },
+          "playedGames": 5,
+          "form": null,
+          "won": 3,
+          "draw": 1,
+          "lost": 1,
+          "points": 10,
+          "goalsFor": 16,
+          "goalsAgainst": 5,
+          "goalDifference": 11
+        },
+        {
+          "position": 4,
+          "team": {
+            "id": 402,
+            "name": "Brentford FC",
+            "shortName": "Brentford",
+            "tla": "BRE",
+            "crest": "https://crests.football-data.org/402.png"
+          },
+          "playedGames": 5,
+          "form": null,
+          "won": 2,
+          "draw": 3,
+          "lost": 0,
+          "points": 9,
+          "goalsFor": 10,
+          "goalsAgainst": 4,
+          "goalDifference": 6
+        }
+      ]
+    }
+  ]
+}

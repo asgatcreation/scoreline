@@ -1,0 +1,116 @@
+{
+  "count": 3,
+  "filters": {
+    "season": "2026",
+    "limit": 3
+  },
+  "competition": {
+    "id": 2021,
+    "name": "Premier League",
+    "code": "PL",
+    "type": "LEAGUE",
+    "emblem": "https://crests.football-data.org/PL.png"
+  },
+  "season": {
+    "id": 2502,
+    "startDate": "2026-08-21",
+    "endDate": "2027-05-30",
+    "currentMatchday": 6,
+    "winner": null
+  },
+  "scorers": [
+    {
+      "player": {
+        "id": 38101,
+        "name": "Erling Haaland",
+        "firstName": "Erling",
+        "lastName": "Haaland",
+        "dateOfBirth": "2000-07-21",
+        "nationality": "Norway",
+        "section": "Offence",
+        "position": null,
+        "shirtNumber": null,
+        "lastUpdated": "2026-06-01T11:16:30Z"
+      },
+      "team": {
+        "id": 65,
+        "name": "Manchester City FC",
+        "shortName": "Man City",
+        "tla": "MCI",
+        "crest": "https://crests.football-data.org/65.png",
+        "address": "SportCity Manchester M11 3FF",
+        "website": "https://www.mancity.com",
+        "founded": 1880,
+        "clubColors": "Sky Blue / White",
+        "venue": "Etihad Stadium",
+        "lastUpdated": "2022-02-10T19:48:37Z"
+      },
+      "playedMatches": 5,
+      "goals": 5,
+      "assists": null,
+      "penalties": null
+    },
+    {
+      "player": {
+        "id": 6486,
+        "name": "Alexander Isak",
+        "firstName": "Alexander",
+        "lastName": "Isak",
+        "dateOfBirth": "1999-09-21",
+        "nationality": "Sweden",
+        "section": "Offence",
+        "position": null,
+        "shirtNumber": null,
+        "lastUpdated": "2026-06-01T11:16:31Z"
+      },
+      "team": {
+        "id": 64,
+        "name": "Liverpool FC",
+        "shortName": "Liverpool",
+        "tla": "LIV",
+        "crest": "https://crests.football-data.org/64.png",
+        "address": "Anfield Road Liverpool L4 0TH",
+        "website": "http://www.liverpoolfc.tv",
+        "founded": 1892,
+        "clubColors": "Red / White",
+        "venue": "Anfield",
+        "lastUpdated": "2022-02-10T19:30:22Z"
+      },
+      "playedMatches": 5,
+      "goals": 4,
+      "assists": null,
+      "penalties": null
+    },
+    {
+      "player": {
+        "id": 99813,
+        "name": "Bukayo Saka",
+        "firstName": "Bukayo",
+        "lastName": "Saka",
+        "dateOfBirth": "2001-09-05",
+        "nationality": "England",
+        "section": "Offence",
+        "position": null,
+        "shirtNumber": null,
+        "lastUpdated": "2026-06-01T11:16:29Z"
+      },
+      "team": {
+        "id": 57,
+        "name": "Arsenal FC",
+        "shortName": "Arsenal",
+        "tla": "ARS",
+        "crest": "https://crests.football-data.org/57.png",
+        "address": "75 Drayton Park London N5 1BU",
+        "website": "http://www.arsenal.com",
+        "founded": 1886,
+        "clubColors": "Red / White",
+        "venue": "Emirates Stadium",
+        "lastUpdated": "2022-02-10T19:48:56Z"
+      },
+      "playedMatches": 5,
+      "goals": 3,
+      "assists": null,
+      "penalties": 1
+    }
+  ]
+}

@@ -1,4 +1,29 @@
-import { apiPort, corsOrigins } from './config.js';
+import { apiPort, corsOrigins, loadConfig } from './config.js';
+
+describe('loadConfig', () => {
+  it('uses free-plan defaults and keeps demo on', () => {
+    const config = loadConfig({});
+    expect(config.apiFootballDailyLimit).toBe(100);
+    expect(config.footballDataMinuteLimit).toBe(10);
+    expect(config.demoEnabled).toBe(true);
+    expect(config.ingestEnabled).toBe(true);
+  });
+
+  it('turns ingest off in tests unless asked', () => {
+    expect(loadConfig({ NODE_ENV: 'test' }).ingestEnabled).toBe(false);
+    expect(loadConfig({ NODE_ENV: 'test', INGEST_ENABLED: 'true' }).ingestEnabled).toBe(true);
+  });
+
+  it('treats blank keys as missing', () => {
+    expect(loadConfig({ API_FOOTBALL_KEY: '  ' }).apiFootballKey).toBeUndefined();
+  });
+
+  it('explains invalid values', () => {
+    expect(() => loadConfig({ API_FOOTBALL_DAILY_LIMIT: 'lots' })).toThrow(
+      /API_FOOTBALL_DAILY_LIMIT/,
+    );
+  });
+});
 
 describe('corsOrigins', () => {
   it('defaults to the local web dev server', () => {

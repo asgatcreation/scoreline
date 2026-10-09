@@ -1,3 +1,62 @@
+import { z } from 'zod';
+
+const bool = z
+  .enum(['true', 'false', '1', '0', ''])
+  .optional()
+  .transform((v) => (v === undefined || v === '' ? undefined : v === 'true' || v === '1'));
+
+const optionalString = z
+  .string()
+  .optional()
+  .transform((v) => (v?.trim() ? v.trim() : undefined));
+
+const envSchema = z.object({
+  NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+  DATABASE_URL: optionalString,
+  API_FOOTBALL_KEY: optionalString,
+  FOOTBALL_DATA_TOKEN: optionalString,
+  /** Requests per day on the API-Football plan (free = 100). */
+  API_FOOTBALL_DAILY_LIMIT: z.coerce.number().int().positive().default(100),
+  /** Requests per minute on the football-data.org plan (free = 10). */
+  FOOTBALL_DATA_MINUTE_LIMIT: z.coerce.number().int().positive().default(10),
+  /** Turn the background ingest worker off (tests, one-off scripts). */
+  INGEST_ENABLED: bool,
+  /** Demo matches that always play live, clearly labelled "Demo". */
+  DEMO_ENABLED: bool,
+});
+
+export interface AppConfig {
+  nodeEnv: 'development' | 'test' | 'production';
+  databaseUrl: string | undefined;
+  apiFootballKey: string | undefined;
+  footballDataToken: string | undefined;
+  apiFootballDailyLimit: number;
+  footballDataMinuteLimit: number;
+  ingestEnabled: boolean;
+  demoEnabled: boolean;
+}
+
+export const APP_CONFIG = Symbol('APP_CONFIG');
+
+export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
+  const parsed = envSchema.safeParse(env);
+  if (!parsed.success) {
+    const problems = parsed.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`);
+    throw new Error(`Invalid environment configuration:\n  ${problems.join('\n  ')}`);
+  }
+  const e = parsed.data;
+  return {
+    nodeEnv: e.NODE_ENV,
+    databaseUrl: e.DATABASE_URL,
+    apiFootballKey: e.API_FOOTBALL_KEY,
+    footballDataToken: e.FOOTBALL_DATA_TOKEN,
+    apiFootballDailyLimit: e.API_FOOTBALL_DAILY_LIMIT,
+    footballDataMinuteLimit: e.FOOTBALL_DATA_MINUTE_LIMIT,
+    ingestEnabled: e.INGEST_ENABLED ?? e.NODE_ENV !== 'test',
+    demoEnabled: e.DEMO_ENABLED ?? true,
+  };
+}
+
 /**
  * Origins allowed to call the API from a browser. Comma-separated in
  * WEB_ORIGIN, e.g. "https://scoreline.vercel.app,http://localhost:3001".

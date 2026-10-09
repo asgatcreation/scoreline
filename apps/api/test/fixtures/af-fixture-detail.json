@@ -1,0 +1,854 @@
+{
+  "get": "fixtures",
+  "parameters": {
+    "id": "1492393"
+  },
+  "errors": [],
+  "results": 1,
+  "paging": {
+    "current": 1,
+    "total": 1
+  },
+  "response": [
+    {
+      "fixture": {
+        "id": 1492393,
+        "referee": "Wilton Sampaio",
+        "timezone": "UTC",
+        "date": "2026-10-08T00:30:00+00:00",
+        "timestamp": 1791419400,
+        "periods": {
+          "first": null,
+          "second": null
+        },
+        "venue": {
+          "id": 234,
+          "name": "Estádio Mineirão",
+          "city": "Bello Harisanta"
+        },
+        "status": {
+          "long": "Match Finished",
+          "short": "FT",
+          "elapsed": 90,
+          "extra": null
+        }
+      },
+      "league": {
+        "id": 71,
+        "name": "Serie A",
+        "country": "Brazil",
+        "logo": "https://media.api-sports.io/football/leagues/71.png",
+        "flag": "https://media.api-sports.io/flags/br.svg",
+        "season": 2026,
+        "round": "Regular Season - 29",
+        "standings": true
+      },
+      "teams": {
+        "home": {
+          "id": 135,
+          "name": "Cruzeiro",
+          "logo": "https://media.api-sports.io/football/teams/135.png",
+          "winner": true
+        },
+        "away": {
+          "id": 126,
+          "name": "Sao Paulo",
+          "logo": "https://media.api-sports.io/football/teams/126.png",
+          "winner": false
+        }
+      },
+      "goals": {
+        "home": 2,
+        "away": 0
+      },
+      "score": {
+        "halftime": {
+          "home": 1,
+          "away": 0
+        },
+        "fulltime": {
+          "home": 2,
+          "away": 0
+        },
+        "extratime": {
+          "home": null,
+          "away": null
+        },
+        "penalty": {
+          "home": null,
+          "away": null
+        }
+      },
+      "events": [
+        {
+          "time": {
+            "elapsed": 21,
+            "extra": null
+          },
+          "team": {
+            "id": 126,
+            "name": "Sao Paulo",
+            "logo": "https://media.api-sports.io/football/teams/126.png"
+          },
+          "player": {
+            "id": 970,
+            "name": "Wendell"
+          },
+          "assist": {
+            "id": null,
+            "name": null
+          },
+          "type": "Card",
+          "detail": "Yellow Card",
+          "comments": "Foul"
+        },
+        {
+          "time": {
+            "elapsed": 24,
+            "extra": null
+          },
+          "team": {
+            "id": 135,
+            "name": "Cruzeiro",
+            "logo": "https://media.api-sports.io/football/teams/135.png"
+          },
+          "player": {
+            "id": 6608,
+            "name": "Gabriel Rojas"
+          },
+          "assist": {
+            "id": null,
+            "name": null
+          },
+          "type": "Card",
+          "detail": "Yellow Card",
+          "comments": "Foul"
+        },
+        {
+          "time": {
+            "elapsed": 44,
+            "extra": null
+          },
+          "team": {
+            "id": 135,
+            "name": "Cruzeiro",
+            "logo": "https://media.api-sports.io/football/teams/135.png"
+          },
+          "player": {
+            "id": 10008,
+            "name": "Kaio Jorge"
+          },
+          "assist": {
+            "id": 25618,
+            "name": "Matheus Pereira"
+          },
+          "type": "Goal",
+          "detail": "Normal Goal",
+          "comments": null
+        },
+        {
+          "time": {
+            "elapsed": 45,
+            "extra": null
+          },
+          "team": {
+            "id": 135,
+            "name": "Cruzeiro",
+            "logo": "https://media.api-sports.io/football/teams/135.png"
+          },
+          "player": {
+            "id": 10100,
+            "name": "Lucas Romer"
+          },
+          "assist": {
+            "id": 504950,
+            "name": "Zé Lucas"
+          },
+          "type": "subst",
+          "detail": "Substitution 1",
+          "comments": null
+        },
+        {
+          "time": {
+            "elapsed": 45,
+            "extra": null
+          },
+          "team": {
+            "id": 126,
+            "name": "Sao Paulo",
+            "logo": "https://media.api-sports.io/football/teams/126.png"
+          },
+          "player": {
+            "id": 9340,
+            "name": "Jose Monteiro"
+          },
+          "assist": {
+            "id": 106510,
+            "name": "Aldemir Ferreira"
+          },
+          "type": "subst",
+          "detail": "Substitution 1",
+          "comments": null
+        },
+        {
+          "time": {
+            "elapsed": 57,
+            "extra": null
+          },
+          "team": {
+            "id": 135,
+            "name": "Cruzeiro",
+            "logo": "https://media.api-sports.io/football/teams/135.png"
+          },
+          "player": {
+            "id": 504950,
+            "name": "Zé Lucas"
+          },
+          "assist": {
+            "id": null,
+            "name": null
+          },
+          "type": "Goal",
+          "detail": "Normal Goal",
+          "comments": null
+        },
+        {
+          "time": {
+            "elapsed": 58,
+            "extra": null
+          },
+          "team": {
+            "id": 135,
+            "name": "Cruzeiro",
+            "logo": "https://media.api-sports.io/football/teams/135.png"
+          },
+          "player": {
+            "id": 6608,
+            "name": "Gabriel Rojas"
+          },
+          "assist": {
+            "id": 51572,
+            "name": "Matías Viña"
+          },
+          "type": "subst",
+          "detail": "Substitution 2",
+          "comments": null
+        },
+        {
+          "time": {
+            "elapsed": 63,
+            "extra": null
+          },
+          "team": {
+            "id": 126,
+            "name": "Sao Paulo",
+            "logo": "https://media.api-sports.io/football/teams/126.png"
+          },
+          "player": {
+            "id": 106510,
+            "name": "Aldemir Ferreira"
+          },
+          "assist": {
+            "id": 7541,
+            "name": "Victor Sá"
+          },
+          "type": "subst",
+          "detail": "Substitution 2",
+          "comments": null
+        },
+        {
+          "time": {
+            "elapsed": 64,
+            "extra": null
+          },
+          "team": {
+            "id": 126,
+            "name": "Sao Paulo",
+            "logo": "https://media.api-sports.io/football/teams/126.png"
+          },
+          "player": {
+            "id": 313732,
+            "name": "Pablo Maia"
+          },
+          "assist": {
+            "id": 505992,
+            "name": "Pedro Ferreira"
+          },
+          "type": "subst",
+          "detail": "Substitution 3",
+          "comments": null
+        },
+        {
+          "time": {
+            "elapsed": 64,
+            "extra": null
+          },
+          "team": {
+            "id": 126,
+            "name": "Sao Paulo",
+            "logo": "https://media.api-sports.io/football/teams/126.png"
+          },
+          "player": {
+            "id": 696,
+            "name": "Marcos Antonio"
+          },
+          "assist": {
+            "id": 277169,
+            "name": "Newton"
+          },
+          "type": "subst",
+          "detail": "Substitution 4",
+          "comments": null
+        },
+        {
+          "time": {
+            "elapsed": 68,
+            "extra": null
+          },
+          "team": {
+            "id": 135,
+            "name": "Cruzeiro",
+            "logo": "https://media.api-sports.io/football/teams/135.png"
+          },
+          "player": {
+            "id": 9445,
+            "name": "Bruno Rodrigues"
+          },
+          "assist": {
+            "id": 414405,
+            "name": "Keny arroyo"
+          },
+          "type": "subst",
+          "detail": "Substitution 3",
+          "comments": null
+        },
+        {
+          "time": {
+            "elapsed": 72,
+            "extra": null
+          },
+          "team": {
+            "id": 135,
+            "name": "Cruzeiro",
+            "logo": "https://media.api-sports.io/football/teams/135.png"
+          },
+          "player": {
+            "id": 25618,
+            "name": "Matheus Pereira"
+          },
+          "assist": {
+            "id": null,
+            "name": null
+          },
+          "type": "Card",
+          "detail": "Yellow Card",
+          "comments": "Foul"
+        },
+        {
+          "time": {
+            "elapsed": 78,
+            "extra": null
+          },
+          "team": {
+            "id": 126,
+            "name": "Sao Paulo",
+            "logo": "https://media.api-sports.io/football/teams/126.png"
+          },
+          "player": {
+            "id": 195107,
+            "name": "Damian Bobadilla"
+          },
+          "assist": {
+            "id": 612911,
+            "name": "Djhordney Ferreira"
+          },
+          "type": "subst",
+          "detail": "Substitution 5",
+          "comments": null
+        },
+        {
+          "time": {
+            "elapsed": 85,
+            "extra": null
+          },
+          "team": {
+            "id": 135,
+            "name": "Cruzeiro",
+            "logo": "https://media.api-sports.io/football/teams/135.png"
+          },
+          "player": {
+            "id": 10008,
+            "name": "Kaio Jorge"
+          },
+          "assist": {
+            "id": 10494,
+            "name": "Matheus Henrique"
+          },
+          "type": "subst",
+          "detail": "Substitution 4",
+          "comments": null
+        },
+        {
+          "time": {
+            "elapsed": 85,
+            "extra": null
+          },
+          "team": {
+            "id": 135,
+            "name": "Cruzeiro",
+            "logo": "https://media.api-sports.io/football/teams/135.png"
+          },
+          "player": {
+            "id": 30408,
+            "name": "Gerson"
+          },
+          "assist": {
+            "id": 297749,
+            "name": "Luciano Rodríguez"
+          },
+          "type": "subst",
+          "detail": "Substitution 5",
+          "comments": null
+        }
+      ],
+      "lineups": [
+        {
+          "team": {
+            "id": 135,
+            "name": "Cruzeiro",
+            "logo": "https://media.api-sports.io/football/teams/135.png",
+            "colors": null
+          },
+          "formation": "4-2-3-1",
+          "coach": {
+            "id": 12089,
+            "name": "Artur Jorge",
+            "photo": "https://media.api-sports.io/football/coachs/12089.png"
+          },
+          "startXI": [
+            {
+              "player": {
+                "id": 360306,
+                "name": "Otávio Eleodoro Rezende Costa",
+                "number": 81,
+                "pos": "G",
+                "grid": "1:1"
+              }
+            },
+            {
+              "player": {
+                "id": 25398,
+                "name": "William",
+                "number": 12,
+                "pos": "D",
+                "grid": "2:4"
+              }
+            },
+            {
+              "player": {
+                "id": 54866,
+                "name": "João Marcelo",
+                "number": 43,
+                "pos": "D",
+                "grid": "2:3"
+              }
+            },
+            {
+              "player": {
+                "id": 422150,
+                "name": "Jonathan",
+                "number": 34,
+                "pos": "D",
+                "grid": "2:2"
+              }
+            },
+            {
+              "player": {
+                "id": 6608,
+                "name": "G. Rojas",
+                "number": 27,
+                "pos": "D",
+                "grid": "2:1"
+              }
+            },
+            {
+              "player": {
+                "id": 10100,
+                "name": "L. Romero",
+                "number": 29,
+                "pos": "M",
+                "grid": "3:2"
+              }
+            },
+            {
+              "player": {
+                "id": 30408,
+                "name": "Gerson",
+                "number": 8,
+                "pos": "M",
+                "grid": "3:1"
+              }
+            },
+            {
+              "player": {
+                "id": 9445,
+                "name": "Bruno Rodrigues",
+                "number": 9,
+                "pos": "M",
+                "grid": "4:3"
+              }
+            },
+            {
+              "player": {
+                "id": 25618,
+                "name": "Matheus Pereira",
+                "number": 10,
+                "pos": "M",
+                "grid": "4:2"
+              }
+            },
+            {
+              "player": {
+                "id": 606701,
+                "name": "Felipe Morais",
+                "number": 38,
+                "pos": "M",
+                "grid": "4:1"
+              }
+            },
+            {
+              "player": {
+                "id": 10008,
+                "name": "Kaio Jorge",
+                "number": 19,
+                "pos": "F",
+                "grid": "5:1"
+              }
+            }
+          ],
+          "substitutes": [
+            {
+              "player": {
+                "id": null,
+                "name": "Kelvin Vinicius Barbosa Coutinho",
+                "number": 84,
+                "pos": "D",
+                "grid": null
+              }
+            },
+            {
+              "player": {
+                "id": 414405,
+                "name": "K. Arroyo",
+                "number": 99,
+                "pos": "F",
+                "grid": null
+              }
+            },
+            {
+              "player": {
+                "id": 2411,
+                "name": "Fágner",
+                "number": 23,
+                "pos": "D",
+                "grid": null
+              }
+            }
+          ]
+        },
+        {
+          "team": {
+            "id": 126,
+            "name": "Sao Paulo",
+            "logo": "https://media.api-sports.io/football/teams/126.png",
+            "colors": null
+          },
+          "formation": "3-4-3",
+          "coach": {
+            "id": 3059,
+            "name": "Dorival Júnior",
+            "photo": "https://media.api-sports.io/football/coachs/3059.png"
+          },
+          "startXI": [
+            {
+              "player": {
+                "id": 50726,
+                "name": "Carlos Coronel",
+                "number": 31,
+                "pos": "G",
+                "grid": "1:1"
+              }
+            },
+            {
+              "player": {
+                "id": 30429,
+                "name": "R. Tolói",
+                "number": 2,
+                "pos": "D",
+                "grid": "2:3"
+              }
+            },
+            {
+              "player": {
+                "id": 2571,
+                "name": "R. Arboleda",
+                "number": 5,
+                "pos": "D",
+                "grid": "2:2"
+              }
+            },
+            {
+              "player": {
+                "id": 9340,
+                "name": "Sabino",
+                "number": 35,
+                "pos": "D",
+                "grid": "2:1"
+              }
+            },
+            {
+              "player": {
+                "id": 449245,
+                "name": "Pedro Lima",
+                "number": 32,
+                "pos": "M",
+                "grid": "3:4"
+              }
+            },
+            {
+              "player": {
+                "id": 313732,
+                "name": "Pablo Maia",
+                "number": 29,
+                "pos": "M",
+                "grid": "3:3"
+              }
+            },
+            {
+              "player": {
+                "id": 696,
+                "name": "Marcos Antônio",
+                "number": 8,
+                "pos": "M",
+                "grid": "3:2"
+              }
+            },
+            {
+              "player": {
+                "id": 970,
+                "name": "Wendell",
+                "number": 18,
+                "pos": "M",
+                "grid": "3:1"
+              }
+            },
+            {
+              "player": {
+                "id": 195107,
+                "name": "D. Bobadilla",
+                "number": 16,
+                "pos": "F",
+                "grid": "4:3"
+              }
+            },
+            {
+              "player": {
+                "id": 47368,
+                "name": "J. Calleri",
+                "number": 9,
+                "pos": "F",
+                "grid": "4:2"
+              }
+            },
+            {
+              "player": {
+                "id": 10040,
+                "name": "Artur",
+                "number": 37,
+                "pos": "F",
+                "grid": "4:1"
+              }
+            }
+          ],
+          "substitutes": [
+            {
+              "player": {
+                "id": 9451,
+                "name": "Lucas Ramon",
+                "number": 19,
+                "pos": "D",
+                "grid": null
+              }
+            },
+            {
+              "player": {
+                "id": null,
+                "name": "Pedro Henrique Bezerra Araújo",
+                "number": 58,
+                "pos": "M",
+                "grid": null
+              }
+            },
+            {
+              "player": {
+                "id": 607347,
+                "name": "G. Santana",
+                "number": 43,
+                "pos": "F",
+                "grid": null
+              }
+            }
+          ]
+        }
+      ],
+      "statistics": [
+        {
+          "team": {
+            "id": 135,
+            "name": "Cruzeiro",
+            "logo": "https://media.api-sports.io/football/teams/135.png"
+          },
+          "statistics": [
+            {
+              "type": "Passes accurate",
+              "value": 401
+            },
+            {
+              "type": "Shots insidebox",
+              "value": 15
+            },
+            {
+              "type": "Shots outsidebox",
+              "value": 8
+            },
+            {
+              "type": "Blocked Shots",
+              "value": 5
+            },
+            {
+              "type": "Free Kicks",
+              "value": 19
+            },
+            {
+              "type": "Shots on Goal",
+              "value": 9
+            },
+            {
+              "type": "Goalkeeper Saves",
+              "value": 3
+            },
+            {
+              "type": "Shots off Goal",
+              "value": 9
+            },
+            {
+              "type": "Offsides",
+              "value": 1
+            },
+            {
+              "type": "Total passes",
+              "value": 469
+            },
+            {
+              "type": "Total Shots",
+              "value": 23
+            },
+            {
+              "type": "Yellow Cards",
+              "value": 2
+            },
+            {
+              "type": "Corner Kicks",
+              "value": 8
+            },
+            {
+              "type": "Fouls",
+              "value": 12
+            },
+            {
+              "type": "Red Cards",
+              "value": 0
+            },
+            {
+              "type": "Ball Possession",
+              "value": "54%"
+            }
+          ]
+        },
+        {
+          "team": {
+            "id": 126,
+            "name": "Sao Paulo",
+            "logo": "https://media.api-sports.io/football/teams/126.png"
+          },
+          "statistics": [
+            {
+              "type": "Passes accurate",
+              "value": 319
+            },
+            {
+              "type": "Shots insidebox",
+              "value": 11
+            },
+            {
+              "type": "Shots outsidebox",
+              "value": 8
+            },
+            {
+              "type": "Blocked Shots",
+              "value": 7
+            },
+            {
+              "type": "Free Kicks",
+              "value": 11
+            },
+            {
+              "type": "Shots on Goal",
+              "value": 3
+            },
+            {
+              "type": "Goalkeeper Saves",
+              "value": 7
+            },
+            {
+              "type": "Shots off Goal",
+              "value": 9
+            },
+            {
+              "type": "Offsides",
+              "value": 2
+            },
+            {
+              "type": "Total passes",
+              "value": 389
+            },
+            {
+              "type": "Total Shots",
+              "value": 19
+            },
+            {
+              "type": "Yellow Cards",
+              "value": 1
+            },
+            {
+              "type": "Corner Kicks",
+              "value": 8
+            },
+            {
+              "type": "Fouls",
+              "value": 20
+            },
+            {
+              "type": "Red Cards",
+              "value": 0
+            },
+            {
+              "type": "Ball Possession",
+              "value": "46%"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

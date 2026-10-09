@@ -1,0 +1,179 @@
+{
+  "get": "fixtures",
+  "parameters": {
+    "live": "all"
+  },
+  "errors": [],
+  "results": 10,
+  "paging": {
+    "current": 1,
+    "total": 1
+  },
+  "response": [
+    {
+      "fixture": {
+        "id": 1507451,
+        "referee": null,
+        "timezone": "UTC",
+        "date": "2026-10-09T08:00:00+00:00",
+        "timestamp": 1791532800,
+        "periods": {
+          "first": 1791532800,
+          "second": null
+        },
+        "venue": {
+          "id": null,
+          "name": null,
+          "city": null
+        },
+        "status": {
+          "long": "First Half",
+          "short": "1H",
+          "elapsed": 44,
+          "extra": null
+        }
+      },
+      "league": {
+        "id": 1104,
+        "name": "Liga 3",
+        "country": "Georgia",
+        "logo": "https://media.api-sports.io/football/leagues/1104.png",
+        "flag": "https://media.api-sports.io/flags/ge.svg",
+        "season": 2026,
+        "round": "Regular Season - 23",
+        "standings": true
+      },
+      "teams": {
+        "home": {
+          "id": 14857,
+          "name": "Didube 2014",
+          "logo": "https://media.api-sports.io/football/teams/14857.png",
+          "winner": false
+        },
+        "away": {
+          "id": 3500,
+          "name": "Lokomotivi Tbilisi",
+          "logo": "https://media.api-sports.io/football/teams/3500.png",
+          "winner": true
+        }
+      },
+      "goals": {
+        "home": 0,
+        "away": 1
+      },
+      "score": {
+        "halftime": {
+          "home": 0,
+          "away": 1
+        },
+        "fulltime": {
+          "home": null,
+          "away": null
+        },
+        "extratime": {
+          "home": null,
+          "away": null
+        },
+        "penalty": {
+          "home": null,
+          "away": null
+        }
+      },
+      "events": [
+        {
+          "time": {
+            "elapsed": 25,
+            "extra": null
+          },
+          "team": {
+            "id": 3500,
+            "name": "Lokomotivi Tbilisi",
+            "logo": "https://media.api-sports.io/football/teams/3500.png"
+          },
+          "player": {
+            "id": null,
+            "name": null
+          },
+          "assist": {
+            "id": null,
+            "name": null
+          },
+          "type": "Goal",
+          "detail": "Normal Goal",
+          "comments": null
+        }
+      ]
+    },
+    {
+      "fixture": {
+        "id": 1565118,
+        "referee": null,
+        "timezone": "UTC",
+        "date": "2026-10-09T08:30:00+00:00",
+        "timestamp": 1791534600,
+        "periods": {
+          "first": 1791534600,
+          "second": null
+        },
+        "venue": {
+          "id": null,
+          "name": null,
+          "city": null
+        },
+        "status": {
+          "long": "First Half",
+          "short": "1H",
+          "elapsed": 20,
+          "extra": null
+        }
+      },
+      "league": {
+        "id": 668,
+        "name": "1. Liga U19",
+        "country": "Czech-Republic",
+        "logo": "https://media.api-sports.io/football/leagues/668.png",
+        "flag": "https://media.api-sports.io/flags/cz.svg",
+        "season": 2026,
+        "round": "Regular Season - 10",
+        "standings": false
+      },
+      "teams": {
+        "home": {
+          "id": 7970,
+          "name": "Viktoria Plzeň U19",
+          "logo": "https://media.api-sports.io/football/teams/7970.png",
+          "winner": null
+        },
+        "away": {
+          "id": 19200,
+          "name": "Dukla Praha U19",
+          "logo": "https://media.api-sports.io/football/teams/19200.png",
+          "winner": null
+        }
+      },
+      "goals": {
+        "home": 0,
+        "away": 0
+      },
+      "score": {
+        "halftime": {
+          "home": 0,
+          "away": 0
+        },
+        "fulltime": {
+          "home": null,
+          "away": null
+        },
+        "extratime": {
+          "home": null,
+          "away": null
+        },
+        "penalty": {
+          "home": null,
+          "away": null
+        }
+      },
+      "events": []
+    }
+  ]
+}
