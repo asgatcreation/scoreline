@@ -9,15 +9,19 @@ services:
     region: frankfurt
     branch: main
     autoDeploy: true
+    # Render's system folders are read-only, so pnpm runs through corepack
+    # directly. The build runs as "development" so build tools (TypeScript,
+    # Nest CLI, Prisma CLI) are installed; the server itself runs as production.
     buildCommand: >-
-      corepack enable &&
-      pnpm install --frozen-lockfile &&
-      pnpm --filter @scoreline/shared build &&
-      pnpm --filter @scoreline/api build
+      export COREPACK_ENABLE_DOWNLOAD_PROMPT=0 NODE_ENV=development &&
+      corepack pnpm install --frozen-lockfile &&
+      corepack pnpm --filter @scoreline/shared build &&
+      corepack pnpm --filter @scoreline/api build
     # Apply any new database migrations, then start the server.
     startCommand: >-
-      pnpm --filter @scoreline/api exec prisma migrate deploy &&
-      node apps/api/dist/main.js
+      cd apps/api &&
+      ./node_modules/.bin/prisma migrate deploy &&
+      node dist/main.js
     healthCheckPath: /healthz
     envVars:
       - key: NODE_VERSION
